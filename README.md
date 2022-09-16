@@ -1,6 +1,6 @@
-# Implementing main models of Computer Vison in Python 
-In order to learn how to implement current Computer Vision papers' models, I would like to inplement some of the main models by pytorch, tensorflow, and keras.\
-I will inplement the models in red below.
+# Python implementation of modern Computer Vision Deep Learning models
+This repository contains pytorch, tensorflow, and keras implementation of modern Computer Vision Deep Learning models.
+Models in red below is planned to be implemented.
 
 [Evolution of major models for object detection](https://github.com/hoya012/deep_learning_object_detection)
 
