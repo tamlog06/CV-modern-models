@@ -4,23 +4,31 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
+import cv2
 
 class RCNN:
     def __init__(self, dataset:str):
-        self.dataset= tfds.load(name=dataset, split=('train', 'test'))
+        self.dataset= tfds.load(name=dataset)
         train = self.dataset['train']
-        test = self.dataset['test']
         # unsupervised = self.dataset['unsupervised']
         print(train)
 
         train = train.as_numpy_iterator()
         data = train.next()
 
+        img = data['image']
+        cv2.imshow('image',img)
+        cv2.waitKey(0)
+
+        print(type(data['image']))
+
         print(data)
 
+        rects = self.selective_search(img, use_cv2=True)
+        print(type(rects))
+        print(rects)
 
 
-    # return iou
     def get_iou(self, bb1: dict, bb2: dict) -> float:
         '''
         Return IoU between bb1 and bb2
@@ -64,6 +72,33 @@ class RCNN:
         assert 0.0 <= IoU <= 1.0
 
         return IoU
+
+    def selective_search(self, img: np.ndarray, use_cv2: bool) -> np.ndarray:
+        '''
+        Return RoIs using Selective Search
+
+        Params
+        ----------------
+        img: np.ndarray of the target image
+        use_cv2: bool, if True, use cv2.ximgproc.segmentation.createSelectiveSearchSegmentation() to get RoIs
+                       if False, use self-implemented selective search to get RoIs
+
+        Description
+        -----------------
+        Selective Search is a method to get RoIs (Region of Interest) from an image.
+        This time, I use Fast mode of Selective Search.
+        return value is a np.ndarray of RoIs, for each RoI, it is specified by [x, y, w, h]
+        '''
+
+        if use_cv2:
+            ss = cv2.ximgproc.segmentation.createSelectiveSearchSegmentation()
+            ss.setBaseImage(img)
+            ss.switchToSelectiveSearchFast()
+            ssresults = ss.process()
+            return ssresults
+        else:
+            return
+
 
 if __name__ == '__main__':
     dataset = 'resisc45'
