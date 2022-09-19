@@ -9,24 +9,25 @@ import cv2
 class RCNN:
     def __init__(self, dataset:str):
         self.dataset= tfds.load(name=dataset)
-        train = self.dataset['train']
-        # unsupervised = self.dataset['unsupervised']
-        print(train)
+        self.show_SS_test()
+        # train = self.dataset['train']
+        # # unsupervised = self.dataset['unsupervised']
+        # print(train)
 
-        train = train.as_numpy_iterator()
-        data = train.next()
+        # train = train.as_numpy_iterator()
+        # data = train.next()
 
-        img = data['image']
-        cv2.imshow('image',img)
-        cv2.waitKey(0)
+        # img = data['image']
+        # cv2.imshow('image',img)
+        # cv2.waitKey(0)
 
-        print(type(data['image']))
+        # print(type(data['image']))
 
-        print(data)
+        # print(data)
 
-        rects = self.selective_search(img, use_cv2=True)
-        print(type(rects))
-        print(rects)
+        # rects = self.selective_search(img, use_cv2=True)
+        # print(type(rects))
+        # print(rects)
 
 
     def get_iou(self, bb1: dict, bb2: dict) -> float:
@@ -73,7 +74,7 @@ class RCNN:
 
         return IoU
 
-    def selective_search(self, img: np.ndarray, use_cv2: bool) -> np.ndarray:
+    def selective_search(self, img: np.ndarray, use_cv2: bool=True) -> np.ndarray:
         '''
         Return RoIs using Selective Search
 
@@ -97,7 +98,29 @@ class RCNN:
             ssresults = ss.process()
             return ssresults
         else:
-            return
+            print('Not implemented yet')
+            exit(1)
+
+    def show_SS_test(self):
+        print(self.dataset)
+        data = self.dataset['train']
+        data = data.as_numpy_iterator()
+        data = data.next()
+
+        img = data['image']
+        label = data['label']
+        name = data['filename']
+
+        rects = self.selective_search(img)
+
+        for rect in rects:
+            x,y,w,h = rect
+            cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),1)
+
+        cv2.imshow('image',img)
+        cv2.waitKey(1)
+
+
 
 
 if __name__ == '__main__':
