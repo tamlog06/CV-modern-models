@@ -8,7 +8,8 @@ import cv2
 
 class RCNN:
     def __init__(self, dataset:str):
-        self.dataset= tfds.load(name=dataset)
+        info, self.dataset= tfds.load(name=dataset, split=('train', 'test'), with_info=True)
+        print(f'downloaded {dataset} \n {info}')
         self.show_SS_test()
         # train = self.dataset['train']
         # # unsupervised = self.dataset['unsupervised']
@@ -124,5 +125,5 @@ class RCNN:
 
 
 if __name__ == '__main__':
-    dataset = 'resisc45'
+    dataset = 'kitti'
     rcnn = RCNN(dataset)
